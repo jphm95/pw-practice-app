@@ -1,4 +1,5 @@
 import {test, expect} from '@playwright/test'
+import { PageManager } from '../page-objects/pageManager'
 import { NavigationPage } from '../page-objects/navigationPage'
 import { FormLayoutsPage } from '../page-objects/formLayoutsPage'
 import { DatepickerPage } from '../page-objects/datepickerPage'
@@ -8,23 +9,21 @@ test.beforeEach(async ({ page }) => {
 })
 
 test('Navigate to form page', async ({page}) =>  {
-    const navigateTo = new NavigationPage(page)
-    await navigateTo.formLayoutsPage()
-    await navigateTo.datePickerPage()
-    await navigateTo.smartTablePage()
-    await navigateTo.toastrPage()
-    await navigateTo.tooltipPage()
+    const pm = new PageManager(page)
+    await pm.navigateTo().formLayoutsPage()
+    await pm.navigateTo().onDatePickerPage()
+    await pm.navigateTo().smartTablePage()
+    await pm.navigateTo().toastrPage()
+    await pm.navigateTo().tooltipPage()
 })
 
 test('Parametrize Methods', async({page}) =>{
-    const navigateTo = new NavigationPage(page)
-    const onFormLayoutsPage = new FormLayoutsPage(page)
-    const onDatePickerDate = new DatepickerPage(page)
-
-    await navigateTo.formLayoutsPage()
-    await onFormLayoutsPage.submitUsingTheGridFormWithCredentialsAndSelectOption("test@tes.com", "Pass123", "Option 2")
-    await onFormLayoutsPage.submitInLineFormWithNameEmailAndCheckbox("JP", "jp@test.com", false)
-    await navigateTo.datePickerPage()
-    await onDatePickerDate.selectCommonDatePickerDateFromToday(20)
-    await onDatePickerDate.selectDatePickerWithRangeFromToday(6, 15)
+    const pm = new PageManager(page)
+    
+    await pm.navigateTo().formLayoutsPage()
+    await pm.onFormLayoutsPage().submitUsingTheGridFormWithCredentialsAndSelectOption("test@tes.com", "Pass123", "Option 2")
+    await pm.onFormLayoutsPage().submitInLineFormWithNameEmailAndCheckbox("JP", "jp@test.com", false)
+    await pm.navigateTo().onDatePickerPage()
+    await pm.onDatePickerPage().selectCommonDatePickerDateFromToday(20)
+    await pm.onDatePickerPage().selectDatePickerWithRangeFromToday(6, 15)
 })
